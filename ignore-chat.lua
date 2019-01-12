@@ -1,7 +1,7 @@
 script_name('Ignore Chats')
 script_author('akionka')
-script_version('1.1')
-script_version_number(2)
+script_version('1.0')
+script_version_number(1)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -18,11 +18,11 @@ script_description([[{FFFFFF}Данный скрипт разработан Akio
 script_properties("forced-reloading-only")
 local update_log = [[{2980b9}v1.0 [13.01.2019]{FFFFFF}
 I. Работает скрытие:
-— Сообщений из HeadQuarters [PD/FBI]
-— Сообщений из 9-1-1 [PD/FBI]
-— Сообщений из лога выдачи звезд [PD/FBI]
-— Сообщений о новых объявлениях [News]
-— Сообщений о вызовах (новые, принятие, отмена итд) [Taxi/EMS]
+- Сообщений из HeadQuarters [PD/FBI]
+- Сообщений из 9-1-1 [PD/FBI]
+- Сообщений из лога выдачи звезд [PD/FBI]
+- Сообщений о новых объявлениях [News]
+- Сообщений о вызовах (новые, принятие, отмена итд) [Taxi/EMS]
 II. Работает система автообновлений (понадобится ли она?)
 III. Работает диалог /igmenu
 IV. Работает ещё что-то о чем я забыл написать]]
@@ -254,11 +254,10 @@ function update(auto)
 					version_num = info.version_num
 					if version_num > thisScript().version_num then
 						sampAddChatMessage(u8:decode("[IC]: Найдено объявление. Текущая версия: {2980b9}"..thisScript().version.."{FFFFFF}, новая версия: {2980b9}"..version.."{FFFFFF}."), -1)
-						if auto then sampAddChatMessage(ini.settings.autoupdate and u8:decode("[IC]: Так как у вас {00FF00}включено{FFFFFF} автообновление, скрипт обновится прямо сейчас. Внимание! Игра может вылететь.") or u8:decode("[IC]: Так как у вас {FF0000}выключено{FFFFFF} автообновление, скрипт не будет обновляться, однако вы можете сделать это в /igmenu."), -1) end
+						if auto then sampAddChatMessage(ini.settings.autoupdate and u8:decode("[IC]: Так как у вас {00FF00}включено{FFFFFF} автообновление, скрипт обновится прямо сейчас. Внимание! Игра или скрипт может вылететь.") or u8:decode("[IC]: Так как у вас {FF0000}выключено{FFFFFF} автообновление, скрипт не будет обновляться, однако вы можете сделать это в /igmenu."), -1) end
 						if ini.settings.autoupdate then 
 							lua_thread.create(goupdate) 
 						elseif not auto then
-							print("here")
 							lua_thread.create(goupdate)
 						else 
 							updateinprogess = false
@@ -274,12 +273,12 @@ function update(auto)
 end
 --скачивание актуальной версии
 function goupdate()
-	print("here")
 	wait(300)
 	downloadUrlToFile("https://raw.githubusercontent.com/Akionka/ignorechat/master/ignore-chat.lua", thisScript().path, function(id3, status1, p13, p23)
 		if status1 == dlstatus.STATUS_ENDDOWNLOADDATA then
-			sampAddChatMessage((u8:decode('[IC]: Обновление завершено! Подробнее об обновлении - /iglog.')), -1)
-			thisScript():reload()
+			sampAddChatMessage((u8:decode('[IC]: Новая версия установлена! Чтобы скрипт обновился нужно либо перезайти в игру, либо ...')), -1)
+			sampAddChatMessage((u8:decode('[IC]: ... если у вас есть автоперезагрузка скриптов, то новая версия уже готова и снизу вы увидите приветственное сообщение')), -1)
+			sampAddChatMessage((u8:decode('[IC]: Если что-то пошло не так, то сообщите мне об этом в VK или Telegram > vk.com/akionka tele.run/akionka')), -1)
 		end	
 	end)
 end
