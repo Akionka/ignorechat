@@ -1,4 +1,4 @@
-script_name('Ignore Chats')
+script_name('Ignore Chat')
 script_author('akionka')
 script_version('1.0')
 script_version_number(1)
