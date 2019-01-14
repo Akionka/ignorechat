@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.2')
-script_version_number(3)
+script_version('1.3')
+script_version_number(4)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -29,7 +29,9 @@ III. Работает диалог /igmenu
 {2980b9}v1.1 [13.01.2019]{FFFFFF}
 I. Теперь скрипт не пишет о ненайденных обновлениях, если скрыто приветственное сообщение
 {2980b9}v1.2 [14.01.2019]{FFFFFF}
-I. Minor improvements]]
+I. Minor improvements
+{2980b9}v1.3 [14.01.2019]{FFFFFF}
+I. Hotfix для /call saloon]]
 local sf = require 'sampfuncs'
 local sampev = require 'lib.samp.events'
 local encoding = require 'encoding'
@@ -184,8 +186,9 @@ local my_dialog = {
 }
 
 function sampev.onServerMessage(color, text)
+	print(color, text)
 	if ini.settings.ignorenews and color == colournews and text:find(u8:decode("На модерацию поступило новое объявление. Всего на модерации находится ")) then return false end
-	if ini.settings.ignorepohq and color == colourpohq then return false end
+	if ini.settings.ignorepohq and color == colourpohq and text:find(u8:decode("[HQ]:")) then return false end
 	if ini.settings.ignorepozv and color == colourpozv then return false end
 	if ini.settings.ignorepoca and color == colourpoca then return false end
 	if ini.settings.ignoreemtx and color == ignoreemtx then return false end
