@@ -265,7 +265,8 @@ function update(auto)
 							updateinprogess = false
 						end
 					else
-						if ini.settings.showstarms and auto then sampAddChatMessage(u8:decode("[IC]: У вас установлена самая свежая версия скрипта."), -1) end
+						if ini.settings.showstarms and auto then sampAddChatMessage(u8:decode("[IC]: У вас установлена самая свежая версия скрипта."), -1)
+						elseif not auto then sampAddChatMessage(u8:decode("[IC]: У вас установлена самая свежая версия скрипта."), -1) end
 						updateinprogess = false
 					end
 				end
