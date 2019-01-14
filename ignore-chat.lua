@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.1')
-script_version_number(2)
+script_version('1.2')
+script_version_number(3)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -27,7 +27,9 @@ I. Работает скрытие:
 II. Работает система автообновлений (понадобится ли она?)
 III. Работает диалог /igmenu
 {2980b9}v1.1 [13.01.2019]{FFFFFF}
-I. Теперь скрипт не пишет о ненайденных обновлениях, если скрыто приветственное сообщение]]
+I. Теперь скрипт не пишет о ненайденных обновлениях, если скрыто приветственное сообщение
+{2980b9}v1.2 [14.01.2019]{FFFFFF}
+I. Minor improvements]]
 local sf = require 'sampfuncs'
 local sampev = require 'lib.samp.events'
 local encoding = require 'encoding'
@@ -111,21 +113,21 @@ local my_dialog = {
     {
         title = u8:decode("О скрипте"),
         onclick = function(menu, row)
-			sampShowDialog(31339, u8:decode("{2980b9} Ignore Chats | О скрипте"), u8:decode(thisScript().description), u8:decode("Окей"), "", DIALOG_STYLE_MSGBOX)
+			sampShowDialog(31339, u8:decode("{2980b9}Ignore Chats | О скрипте"), u8:decode(thisScript().description), u8:decode("Окей"), "", DIALOG_STYLE_MSGBOX)
 			return false
         end
     },
     {
         title = u8:decode("Update log"),
         onclick = function(menu, row)
-			sampShowDialog(31340, u8:decode("{2980b9} Ignore Chats | Update Log"), u8:decode(update_log), u8:decode("Окей"), "", DIALOG_STYLE_MSGBOX)
+			sampShowDialog(31340, u8:decode("{2980b9}Ignore Chats | Update Log"), u8:decode(update_log), u8:decode("Окей"), "", DIALOG_STYLE_MSGBOX)
 			return false
         end
     },
     {
         title = u8:decode("Доп. настройки"),
 		submenu = {
-			title = u8:decode("{2980b9} Ignore Chats | Доп. настройки"),
+			title = u8:decode("{2980b9}Ignore Chats | Доп. настройки"),
 			onclick = function(menu, row, submenu)
 				submenu[1].title = ini.settings.autoupdate and u8:decode("Автообновление — {00FF00}включено{FFFFFF}.") or u8:decode("Автообновление — {FF0000}выключено{FFFFFF}.")
 				submenu[2].title = ini.settings.showstarms and u8:decode("Приветственное сообщение — {00FF00}включено{FFFFFF}.") or u8:decode("Приветственное сообщение — {FF0000}выключено{FFFFFF}.")
@@ -193,10 +195,7 @@ function main()
 	if not isSampfuncsLoaded() or not isSampLoaded() then return end
     while not isSampAvailable() do wait(0) end
 	
-	my_dialog[1].title = ignorenews and u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {FF0000}выключен{FFFFFF}.")
-	my_dialog[2].title = ignorepohq and u8:decode("[IC]: Режим игнорирования сообщений из HQ — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений из HQ — {FF0000}выключен{FFFFFF}.")
-	my_dialog[3].title = ignorepozv and u8:decode("[IC]: Режим игнорирования сообщений о розыске — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о розыске — {FF0000}выключен{FFFFFF}.") 
-	my_dialog[4].title = ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {FF0000}выключен{FFFFFF}.")
+	updatemenu()
 	sampRegisterChatCommand("ignews", function() ini.settings.ignorenews = not ini.settings.ignorenews inicfg.save(ini, "ignore-chat") sampAddChatMessage(ini.settings.ignorenews and u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях теперь — {00FF00}включен{2980b9}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях теперь — {FF0000}выключен{2980b9}."), 0x2980b9) end)
 	sampRegisterChatCommand("igpohq", function() ini.settings.ignorepohq = not ini.settings.ignorepohq inicfg.save(ini, "ignore-chat") sampAddChatMessage(ini.settings.ignorepohq and u8:decode("[IC]: Режим игнорирования сообщений из HQ теперь — {00FF00}включен{2980b9}.") or u8:decode("[IC]: Режим игнорирования сообщений из HQ теперь — {FF0000}выключен{2980b9}."), 0x2980b9) end)
 	sampRegisterChatCommand("igpozv", function() ini.settings.ignorepozv = not ini.settings.ignorepozv inicfg.save(ini, "ignore-chat") sampAddChatMessage(ini.settings.ignorepozv and u8:decode("[IC]: Режим игнорирования сообщений о розыске теперь — {00FF00}включен{2980b9}.") or u8:decode("[IC]: Режим игнорирования сообщений о розыске теперь — {FF0000}выключен{2980b9}."), 0x2980b9) end)
@@ -204,16 +203,12 @@ function main()
 	sampRegisterChatCommand("igemtx", function() ini.settings.ignorepoca = not ini.settings.ignorepoca inicfg.save(ini, "ignore-chat") sampAddChatMessage(ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS теперь — {00FF00}включен{2980b9}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS теперь — {FF0000}выключен{2980b9}."), 0x2980b9) end)
 	sampRegisterChatCommand("igmenu", function() 
 		lua_thread.create(function()
-			my_dialog[1].title = ini.settings.ignorenews and u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {FF0000}выключен{FFFFFF}.")
-			my_dialog[2].title = ini.settings.ignorepohq and u8:decode("[IC]: Режим игнорирования сообщений из HQ — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений из HQ — {FF0000}выключен{FFFFFF}.")
-			my_dialog[3].title = ini.settings.ignorepozv and u8:decode("[IC]: Режим игнорирования сообщений о розыске — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о розыске — {FF0000}выключен{FFFFFF}.") 
-			my_dialog[4].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {FF0000}выключен{FFFFFF}.")
-			my_dialog[5].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {FF0000}выключен{FFFFFF}.")
-			submenus_show(my_dialog, u8:decode("{2980b9} Ignore Chats"))
+			updatemenu()
+			submenus_show(my_dialog, u8:decode("{2980b9}Ignore Chats"))
 		end) 
 	end)
 	sampRegisterChatCommand("iglog", function()
-		sampShowDialog(31340, u8:decode("{2980b9} Ignore Chats | Update Log"), u8:decode(update_log), u8:decode("Окей"), "", DIALOG_STYLE_MSGBOX)
+		sampShowDialog(31340, u8:decode("{2980b9}Ignore Chats | Update Log"), u8:decode(update_log), u8:decode("Окей"), "", DIALOG_STYLE_MSGBOX)
 	end)
 	if ini.settings.showstarms then
 		sampAddChatMessage(u8:decode("[IC]: Скрипт {00FF00}успешно{FFFFFF} загружен. Версия: {2980b9}"..thisScript().version.."{FFFFFF}."), -1)
@@ -225,21 +220,13 @@ function main()
 		wait(0)
 		local result, button, list, input = sampHasDialogRespond(31339)
 		if result then 
-			my_dialog[1].title = ini.settings.ignorenews and u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {FF0000}выключен{FFFFFF}.")
-			my_dialog[2].title = ini.settings.ignorepohq and u8:decode("[IC]: Режим игнорирования сообщений из HQ — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений из HQ — {FF0000}выключен{FFFFFF}.")
-			my_dialog[3].title = ini.settings.ignorepozv and u8:decode("[IC]: Режим игнорирования сообщений о розыске — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о розыске — {FF0000}выключен{FFFFFF}.") 
-			my_dialog[4].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {FF0000}выключен{FFFFFF}.")
-			my_dialog[5].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {FF0000}выключен{FFFFFF}.")
-			submenus_show(my_dialog, u8:decode("{2980b9} Ignore Chats"))
+			updatemenu()
+			submenus_show(my_dialog, u8:decode("{2980b9}Ignore Chats"))
 		end
 		local result, button, list, input = sampHasDialogRespond(31340)
 		if result then 
-			my_dialog[1].title = ini.settings.ignorenews and u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {FF0000}выключен{FFFFFF}.")
-			my_dialog[2].title = ini.settings.ignorepohq and u8:decode("[IC]: Режим игнорирования сообщений из HQ — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений из HQ — {FF0000}выключен{FFFFFF}.")
-			my_dialog[3].title = ini.settings.ignorepozv and u8:decode("[IC]: Режим игнорирования сообщений о розыске — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о розыске — {FF0000}выключен{FFFFFF}.") 
-			my_dialog[4].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {FF0000}выключен{FFFFFF}.")
-			my_dialog[5].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {FF0000}выключен{FFFFFF}.")
-			submenus_show(my_dialog, u8:decode("{2980b9} Ignore Chats"))
+			updatemenu()
+			submenus_show(my_dialog, u8:decode("{2980b9}Ignore Chats"))
 		end
 	end
 end
@@ -273,6 +260,14 @@ function update(auto)
 			end
 		end
 	end)
+end
+
+function updatemenu()
+	my_dialog[1].title = ini.settings.ignorenews and u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых объявлениях — {FF0000}выключен{FFFFFF}.")
+	my_dialog[2].title = ini.settings.ignorepohq and u8:decode("[IC]: Режим игнорирования сообщений из HQ — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений из HQ — {FF0000}выключен{FFFFFF}.")
+	my_dialog[3].title = ini.settings.ignorepozv and u8:decode("[IC]: Режим игнорирования сообщений о розыске — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о розыске — {FF0000}выключен{FFFFFF}.") 
+	my_dialog[4].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых звонках в 9-1-1 — {FF0000}выключен{FFFFFF}.")
+	my_dialog[5].title = ini.settings.ignorepoca and u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {00FF00}включен{FFFFFF}.") or u8:decode("[IC]: Режим игнорирования сообщений о новых вызовах Taxi/EMS — {FF0000}выключен{FFFFFF}.")
 end
 --скачивание актуальной версии
 function goupdate()
