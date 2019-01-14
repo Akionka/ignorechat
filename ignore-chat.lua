@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.0')
-script_version_number(1)
+script_version('1.1')
+script_version_number(2)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -26,7 +26,8 @@ I. Работает скрытие:
 - Сообщений о вызовах (новые, принятие, отмена итд) [Taxi/EMS]
 II. Работает система автообновлений (понадобится ли она?)
 III. Работает диалог /igmenu
-IV. Работает ещё что-то о чем я забыл написать]]
+{2980b9}v1.1 [13.01.2019]{FFFFFF}
+I. Теперь скрипт не пишет о ненайденных обновлениях, если скрыто приветственное сообщение]]
 local sf = require 'sampfuncs'
 local sampev = require 'lib.samp.events'
 local encoding = require 'encoding'
@@ -264,7 +265,7 @@ function update(auto)
 							updateinprogess = false
 						end
 					else
-						sampAddChatMessage(u8:decode("[IC]: У вас установлена самая свежая версия скрипта."), -1)
+						if ini.settings.showstarms and auto then sampAddChatMessage(u8:decode("[IC]: У вас установлена самая свежая версия скрипта."), -1) end
 						updateinprogess = false
 					end
 				end
