@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.3')
-script_version_number(4)
+script_version('1.4')
+script_version_number(5)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -24,14 +24,16 @@ I. Работает скрытие:
 - Сообщений из лога выдачи звезд [PD/FBI]
 - Сообщений о новых объявлениях [News]
 - Сообщений о вызовах (новые, принятие, отмена итд) [Taxi/EMS]
-II. Работает система автообновлений (понадобится ли она?)
+II. Работает система автообновлений
 III. Работает диалог /igmenu
 {2980b9}v1.1 [13.01.2019]{FFFFFF}
 I. Теперь скрипт не пишет о ненайденных обновлениях, если скрыто приветственное сообщение
 {2980b9}v1.2 [14.01.2019]{FFFFFF}
 I. Minor improvements
 {2980b9}v1.3 [14.01.2019]{FFFFFF}
-I. Hotfix для /call saloon]]
+I. Hotfix для /call saloon
+{2980b9}v1.4 [14.01.2019]{FFFFFF}
+I. Убран лишний флуд из консоли, который совершенно случайно туда попал.]]
 local sf = require 'sampfuncs'
 local sampev = require 'lib.samp.events'
 local encoding = require 'encoding'
@@ -186,7 +188,6 @@ local my_dialog = {
 }
 
 function sampev.onServerMessage(color, text)
-	print(color, text)
 	if ini.settings.ignorenews and color == colournews and text:find(u8:decode("На модерацию поступило новое объявление. Всего на модерации находится ")) then return false end
 	if ini.settings.ignorepohq and color == colourpohq and text:find(u8:decode("[HQ]:")) then return false end
 	if ini.settings.ignorepozv and color == colourpozv then return false end
