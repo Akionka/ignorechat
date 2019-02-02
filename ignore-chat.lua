@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.5')
-script_version_number(6)
+script_version('1.6')
+script_version_number(7)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -35,6 +35,8 @@ I. Hotfix для /call saloon
 {2980b9}v1.4 [14.01.2019]{FFFFFF}
 I. Убран лишний флуд из консоли, который совершенно случайно туда попал.
 {2980b9}v1.5 [26.01.2019]{FFFFFF}
+I. Minor fixes
+{2980b9}v1.6 [23.02.2019]{FFFFFF}
 I. Minor fixes]]
 local sf = require 'sampfuncs'
 local sampev = require 'lib.samp.events'
@@ -268,6 +270,7 @@ function goupdate()
 			sampAddChatMessage(u8:decode('[IC]: Новая версия установлена! Чтобы скрипт обновился нужно либо перезайти в игру, либо ...'), -1)
 			sampAddChatMessage(u8:decode('[IC]: ... если у вас есть автоперезагрузка скриптов, то новая версия уже готова и снизу вы увидите приветственное сообщение.'), -1)
 			sampAddChatMessage(u8:decode('[IC]: Если что-то пошло не так, то сообщите мне об этом в VK или Telegram > {2980b0}vk.com/akionka tele.run/akionka{FFFFFF}.'), -1)
+			updateinprogess = false
 		end
 	end)
 end
