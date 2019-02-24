@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.6')
-script_version_number(7)
+script_version('1.7')
+script_version_number(8)
 script_description([[{FFFFFF}Данный скрипт разработан Akionka с использованием кода от FYP'а, а также с использованием идей коммьюнити Trinity GTA.
 В данный момент скрипт умеет:
  - Скрывать сообщения о новых объявлениях [News]
@@ -16,7 +16,6 @@ script_description([[{FFFFFF}Данный скрипт разработан Akio
 
 Зачем это все нужно? Людям было банально неудобно создавать SS, когда весь чат срался этими сообщениями.
 Вероятно, скрипт имеет баги, поэтому прошу о всех найденных багах писать мне в личку (ссылки в /igmenu).]])
-script_properties("forced-reloading-only")
 local update_log = [[{2980b9}v1.0 [12.01.2019]{FFFFFF}
 I. Работает скрытие:
 - Сообщений из HeadQuarters [PD/FBI]
@@ -36,8 +35,10 @@ I. Hotfix для /call saloon
 I. Убран лишний флуд из консоли, который совершенно случайно туда попал.
 {2980b9}v1.5 [26.01.2019]{FFFFFF}
 I. Minor fixes
-{2980b9}v1.6 [23.02.2019]{FFFFFF}
-I. Minor fixes]]
+{2980b9}v1.6 [03.02.2019]{FFFFFF}
+I. Minor fixes
+{2980b9}v1.7 [24.02.2019]{FFFFFF}
+I. HQ fixed]]
 local sf = require 'sampfuncs'
 local sampev = require 'lib.samp.events'
 local encoding = require 'encoding'
@@ -47,7 +48,8 @@ encoding.default = 'cp1251'
 u8 = encoding.UTF8
 --
 local colournews = -290866945 --цвет news
-local colourpohq = 1687547391 --цвет hq
+local colourpohq1 = 1687547391 --цвет hq1
+local colourpohq2 = -12254977 --цвет hq2
 local colourpozv = -8224001 --цвет звезд
 local colourpoca = -789528321 --цвет 9-1-1
 local colouremtx = -285256193 --цвет вызовов такси и емс
@@ -193,7 +195,8 @@ local my_dialog = {
 
 function sampev.onServerMessage(color, text)
 	if ini.settings.ignorenews and color == colournews and text:find(u8:decode("На модерацию поступило новое объявление. Всего на модерации находится ")) then return false end
-	if ini.settings.ignorepohq and color == colourpohq and text:find(u8:decode("[HQ]:")) then return false end
+	if ini.settings.ignorepohq and color == colourpohq1 and text:find(u8:decode("[HQ]:")) then return false end
+	if ini.settings.ignorepohq and color == colourpohq2 and text:find(u8:decode("[HQ]:")) then return false end
 	if ini.settings.ignorepozv and color == colourpozv then return false end
 	if ini.settings.ignorepoca and color == colourpoca then return false end
 	if ini.settings.ignoreemtx and color == ignoreemtx then return false end
