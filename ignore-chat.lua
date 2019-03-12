@@ -2,10 +2,6 @@ script_name('Ignore Chat')
 script_author('akionka')
 script_version('1.8')
 script_version_number(9)
-local res, sampev = pcall(require, 'lib.samp.events')
-assert(res, 'Не найдено sampev')
-local res, imgui = pcall(require, 'imgui')
-assert(res, 'Не найдено ImGui')
 local sampev = require 'lib.samp.events'
 local imgui = require 'imgui'
 local encoding = require 'encoding'
