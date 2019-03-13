@@ -9,7 +9,7 @@ local inicfg = require 'inicfg'
 local dlstatus = require('moonloader').download_status
 encoding.default = 'cp1251'
 u8 = encoding.UTF8
---
+
 local colournews = -290866945 --цвет news
 local colourpohq1 = 1687547391 --цвет hq1
 local colourpohq2 = -12254977 --цвет hq2
