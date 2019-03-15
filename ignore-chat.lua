@@ -1,7 +1,7 @@
 script_name('Ignore Chat')
 script_author('akionka')
-script_version('1.8')
-script_version_number(9)
+script_version('1.8.1')
+script_version_number(10)
 local sampev   = require 'lib.samp.events'
 local imgui    = require 'imgui'
 local encoding = require 'encoding'
@@ -131,7 +131,7 @@ function checkupdates(json)
           os.remove(fpath)
           if updateversion > thisScript().version_num then
             updatesavaliable = true
-            sampAddChatMessage(u8:decode("[IC]: Найдено объявление. Текущая версия: {2980b9}"..thisScript().version.."{FFFFFF}, новая версия: {2980b9}"..updateversion.."{FFFFFF}."), -1)
+            sampAddChatMessage(u8:decode("[IC]: Найдено объявление. Текущая версия: {2980b9}"..thisScript().version.."{FFFFFF}, новая версия: {2980b9}"..info.version.."{FFFFFF}."), -1)
             return true
           else
             updatesavaliable = false
