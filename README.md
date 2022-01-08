@@ -1,4 +1,4 @@
-# Не актуально после [обновления от 07.08.2021](https://gta-trinity.ru/forum/topic/137-a/?do=findComment&comment=3579600)
+# Неактуально после [обновления от 07.08.2021](https://gta-trinity.ru/forum/topic/137-a/?do=findComment&comment=3579600)
 # Ignore Chat
 
 *Игнорирование лишнего мусора в чате. Trinity GTA.*
